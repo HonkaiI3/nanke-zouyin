@@ -1,4 +1,5 @@
 import page from './page.js';
+import icons from './game-icons.js';
 const source='https://docs.qq.com/smartsheet/DQlV6bXRGdWhpQVBI';
 let latest, inflight, failure;
 async function request(url,headers={}) {
@@ -65,6 +66,10 @@ async function load() {
 }
 export default {async fetch(req){
   const path=new URL(req.url).pathname;
+  if(Object.hasOwn(icons,path)){
+    const bytes=Uint8Array.from(atob(icons[path]),char=>char.charCodeAt(0));
+    return new Response(bytes,{headers:{'content-type':'image/webp','cache-control':'public, max-age=3600'}});
+  }
   if(path==='/') return new Response(page,{headers:{'content-type':'text/html; charset=utf-8'}});
   if(path!=='/api/ranking') return new Response('',{status:404});
   if(req.method==='POST' && req.headers.get('sec-fetch-site')!=='cross-site') failure=null;
