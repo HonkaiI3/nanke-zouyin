@@ -1,0 +1,111 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>预选排行榜 · 第六届南科奏音</title>
+<style>
+:root{color-scheme:dark;--paper:#eceef3;--faint:#a5acbb;--rule:#343a46;font:16px/1.48 "Inter","Segoe UI","Microsoft YaHei",sans-serif;color:var(--paper);background:#121419}
+*{box-sizing:border-box}body{margin:0}main{max-width:1184px;margin:auto;padding:0 clamp(14px,4vw,52px) 60px}
+.mast,nav,.bar{display:flex;align-items:center}.mast{justify-content:space-between;gap:20px;min-height:74px;border-bottom:1px solid var(--rule);margin-bottom:20px}.brand{display:flex;gap:10px;align-items:center;font-size:19px;font-weight:750;letter-spacing:.05em;white-space:nowrap}.brand i{width:26px;height:24px;display:inline-block;background:repeating-linear-gradient(105deg,#d6f58d 0 4px,transparent 4px 7px);clip-path:polygon(0 34%,100% 0,85% 70%,0 100%)}
+nav{gap:3px;flex-wrap:wrap}nav a{color:#b8bdc9;text-decoration:none;padding:8px 11px;font-size:14px;border-radius:5px;transition:color .15s,background .15s}nav a:hover{color:white;background:#242932}nav a[aria-current]{background:var(--paper);color:#151920;font-weight:700}a:focus-visible,button:focus-visible{outline:2px solid #adec7f;outline-offset:2px}
+header{position:relative;isolation:isolate;overflow:hidden;padding:clamp(22px,3.6vw,50px);min-height:clamp(232px,25vw,292px);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;background:radial-gradient(ellipse at 73% 55%,var(--ink),transparent 65%),#1b1e25;border:1px solid #ffffff25;border-radius:12px}
+header::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:repeating-linear-gradient(0deg,transparent 0 3px,#0000000b 3px 4px)}
+header canvas{position:absolute;right:0;top:0;width:55%;height:100%;z-index:-2}
+header p,.game,h1{margin:0}header p{font-size:14px;letter-spacing:.11em;font-weight:600;color:#d1d6df}h1{font-family:"Archivo Black","Arial Black","Microsoft YaHei",sans-serif;font-size:clamp(41px,6.1vw,84px);font-weight:900;line-height:1.12;letter-spacing:-.058em;margin:8px 0;max-width:75%}.game{font-size:clamp(15px,1.7vw,20px);color:var(--light)}
+.bar{align-items:baseline;justify-content:space-between;gap:10px;margin:25px 0 6px}.bar h2{font-size:clamp(22px,2.5vw,30px);margin:0;letter-spacing:-.045em}
+#status,footer,aside{font-size:14px;color:var(--faint)}#status[data-state=live]::before{content:"";width:6px;height:6px;display:inline-block;border-radius:50%;background:#b3e185;margin:0 7px 2px 0}footer,aside:not(:empty){margin-top:14px}
+table{width:100%;border-spacing:0 5px;table-layout:fixed;text-align:left}th,td{padding:7px clamp(9px,2vw,22px)}th{font-weight:500;color:var(--faint);font-size:14px}th:first-child{width:16%}th:last-child{width:38%}th:last-child,td:last-child{text-align:right}
+tbody tr{--edge:#30353e;--metal:#b4b9c6;--tone:#1a1d24}td{height:46px;border-bottom:1px solid var(--edge);font-weight:600}td:nth-child(2){overflow-wrap:anywhere}td:last-child,.rank{font-family:"Bahnschrift","Arial Narrow",sans-serif;font-variant-numeric:tabular-nums}.rank{color:var(--metal);font-style:italic;font-weight:600}td:last-child{font-size:20px}
+tr[data-medal="1"]{--edge:#caa366;--metal:#ffe1a3;--tone:#47392d}
+tr[data-medal="2"]{--edge:#9eaab7;--metal:#e3edf8;--tone:#303943}
+tr[data-medal="3"]{--edge:#aa7963;--metal:#f2bc9f;--tone:#402d29}
+tr[data-medal]{background:linear-gradient(100deg,var(--tone),#1d2026 68%,var(--tone))}
+tr[data-medal] td{border-block:1px solid var(--edge);height:59px}
+tr[data-medal] td:first-child{border-left:3px solid var(--edge);border-radius:5px 0 0 5px}
+tr[data-medal] td:last-child{border-right:1px solid var(--edge);border-radius:0 5px 5px 0;color:var(--metal);font-size:clamp(21px,2.6vw,32px);letter-spacing:-.025em}
+tr[data-medal] .rank{font-size:clamp(22px,2.6vw,32px);color:var(--metal)}tr[data-medal] td:nth-child(2){font-size:clamp(17px,1.7vw,21px)}
+.champion{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px}.winner{flex:1 1 240px;padding:26px 30px;background:linear-gradient(110deg,#28292f,#191b21);border-block:1px solid var(--rule);border-left:3px solid var(--accent)}.winner p{margin:0;color:#bfc3cd}.winner strong{font-size:clamp(27px,3.4vw,44px);letter-spacing:-.035em}
+button{font:inherit;color:#14181d;background:var(--paper);border:0;border-radius:6px;padding:8px 16px;margin-top:14px;cursor:pointer}[hidden]{display:none!important}
+@media(prefers-reduced-motion:no-preference){header canvas{animation:disc-enter .8s cubic-bezier(.16,1,.3,1) both}.moved .rank{animation:rank-flash 1.3s ease-out}@keyframes disc-enter{from{opacity:0;transform:translateX(18px) rotate(2deg)}}@keyframes rank-flash{15%{color:white;text-shadow:0 0 12px var(--metal)}}}
+@media(max-width:700px){.mast{display:block;padding-top:12px;margin-bottom:12px}.brand{font-size:17px}.brand i{height:19px;width:22px}nav{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:0;padding:8px 0}nav a{padding:6px 0;text-align:center}.bar{margin-top:17px}header{min-height:179px;padding:17px}header canvas{width:51%;opacity:.82}h1{font-size:clamp(30px,7.6vw,49px);max-width:68%}header p{font-size:14px}.game{font-size:15px}tr[data-medal] td{height:53px}.winner{padding:20px}th:first-child{width:16%}th:last-child{width:40%}}
+</style><main><div class="mast"><span class="brand"><i aria-hidden="true"></i>南科奏音</span><nav aria-label="历届比赛"><a href="?edition=1">第一届</a><a href="?edition=2">第二届</a><a href="?edition=3">第三届</a><a href="?edition=4">第四届</a><a href="?edition=osu">osu!</a><a href="?edition=5">第五届</a><a href="?edition=6">第六届</a></nav></div><header><canvas aria-hidden="true"></canvas><p>第六届南科奏音</p><h1>线上预选排行榜</h1><span class="game"></span></header><section id="history" class="champion" hidden></section><section id="live"><div class="bar"><h2>选手排名</h2><span id="status" role="status">正在读取腾讯文档…</span></div><div class="sheet"><table><thead><tr><th>名次</th><th>选手</th><th>预选课题曲总分</th></tr></thead><tbody></tbody></table></div><aside id="pending"></aside><footer>每 30 秒同步 · 同一提交者名称取最高分 · 同分并列</footer><button id="resume" hidden>恢复同步</button></section></main>
+<script>
+const select=s=>document.querySelector(s);
+let previousRanks=new Map();
+async function sync(resume=false){
+ select('#resume').hidden=true;
+ try {
+  const response=await fetch('/api/ranking',{method:resume?'POST':'GET',cache:'no-store'});
+  const {data,error}=await response.json();
+  if(data){
+    const fragment=document.createDocumentFragment();
+    for(const row of data.rows){
+      const tr=document.createElement('tr'),badge=document.createElement('span');
+      if(previousRanks.has(row.name)&&previousRanks.get(row.name)!==row.rank) tr.className='moved';
+      if(row.rank<=3) tr.dataset.medal=String(row.rank);
+      badge.className='rank';badge.textContent=String(row.rank).padStart(2,'0');tr.insertCell().append(badge);
+      tr.insertCell().textContent=row.name;tr.insertCell().textContent=row.score.toLocaleString('zh-CN');fragment.append(tr);
+    }
+    select('tbody').replaceChildren(fragment);
+    previousRanks=new Map(data.rows.map(row=>[row.name,row.rank]));
+    select('#status').dataset.state='live';
+    select('#pending').textContent=data.pending.length?'待核对（未计入排名）：'+data.pending.join('、'):data.rows.length?'':'暂无成绩';
+    select('#status').textContent='最近同步 '+new Date(data.updated).toLocaleTimeString('zh-CN',{hour12:false});
+  }
+  if(error||!response.ok) throw Error(error||'数据源异常');
+  setTimeout(sync,30000);
+ }catch(err){delete select('#status').dataset.state;select('#status').textContent='同步暂停 · '+err.message;select('#resume').hidden=false}
+}
+const editions={
+ '1':{title:'节奏大师比赛',winners:[['冠军','六苯乙烷']],colors:['#142f34','#50d3ae','#c9ffe6'],art:'keys'},
+ '2':{title:'Phigros 比赛',winners:[['冠军','哆啦小鱼']],colors:['#242040','#b29df9','#f4dcff'],art:'lines'},
+ '3':{title:'Arcaea 娱乐赛',winners:[['冠军','QX']],colors:['#34253f','#e5a3de','#fbe4f8'],art:'arc'},
+ '4':{title:'PJSK 比赛',winners:[['冠军','陟']],colors:['#0d383c','#54e4da','#defff2'],art:'stage'},
+ osu:{title:'osu! 比赛',period:'第四届与第五届之间',note:'赛事中途停办',colors:['#412338','#f199c3','#ffe1ee'],art:'circles'},
+ '5':{title:'舞萌中二娱乐赛',winners:[['舞萌冠军','terry'],['中二冠军','拉点林安']],colors:['#392d1e','#f4b65b','#ffebad'],art:'rings'},
+ '6':{title:'线上预选排行榜',game:'Phigros',colors:['#172345','#7b9fff','#caf4ff'],art:'lines'}
+};
+const requested=new URL(location.href).searchParams.get('edition');
+const edition=Object.hasOwn(editions,requested)?requested:'6';
+const eventInfo=editions[edition];
+const current=select('nav a[href="?edition='+edition+'"]');
+current.setAttribute('aria-current','page');
+['--ink','--accent','--light'].forEach((v,i)=>document.body.style.setProperty(v,eventInfo.colors[i]));
+select('header p').textContent=eventInfo.period||current.textContent+'南科奏音';
+select('h1').textContent=eventInfo.game||eventInfo.title;
+select('.game').textContent=eventInfo.game?eventInfo.title:'';
+select('.game').hidden=!eventInfo.game;
+document.title=select('header p').textContent+' · '+(eventInfo.game||'')+eventInfo.title;
+function cover(){
+ const canvas=select('canvas'),ctx=canvas.getContext('2d'),rect=canvas.getBoundingClientRect(),scale=Math.min(devicePixelRatio,2);
+ canvas.width=Math.round(rect.width*scale);canvas.height=Math.round(rect.height*scale);
+ // A pressed disc seen obliquely, with separate highlights on its rim and grooves.
+ const unit=Math.min(canvas.width/365,canvas.height/236);
+ ctx.translate(canvas.width*.57,canvas.height*.52);
+ ctx.scale(unit,unit);ctx.rotate(-.35);ctx.scale(1,.76);
+ const radius=145,angle=edition==='osu'?2.5:Number(edition)*.27;
+ const [,accent,light]=eventInfo.colors;
+ function circle(r){ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2)}
+ const foil=ctx.createConicGradient ? ctx.createConicGradient(angle,0,0) : ctx.createLinearGradient(-radius,-radius,radius,radius);
+ for(const [t,c] of [[0,'#171a22'],[.08,'#535761'],[.14,light],[.17,accent],[.23,'#292b36'],[.34,'#13161c'],[.47,'#717780'],[.53,'#e7e9e6'],[.56,accent],[.61,'#41434c'],[.74,'#171920'],[.85,'#555968'],[.92,'#252832'],[1,'#171a22']])foil.addColorStop(t,c);
+ ctx.fillStyle='#080a0f';circle(radius+2);ctx.shadowColor='#0009';ctx.shadowBlur=12;ctx.shadowOffsetY=6;ctx.fill();ctx.shadowBlur=0;ctx.shadowOffsetY=0;
+ circle(radius);ctx.fillStyle=foil;ctx.fill();ctx.strokeStyle='#dfe7f288';ctx.lineWidth=1;ctx.stroke();
+ for(let r=51;r<144;r+=1.9){circle(r);ctx.lineWidth=.66;ctx.strokeStyle=r%4<2?'#f6f7ff55':'#03091499';ctx.stroke()}
+ ctx.fillStyle=accent;circle(47);ctx.fill();
+ ctx.save();circle(44);ctx.clip();ctx.rotate(angle);
+ ctx.strokeStyle='#121820';ctx.lineWidth=3;
+ for(let i=-4;i<5;i++){ctx.beginPath();ctx.moveTo(-50,i*8);ctx.bezierCurveTo(-9,i*8+28,4,i*8-28,51,i*8);ctx.stroke()}ctx.restore();
+ ctx.fillStyle='#191c24';circle(9);ctx.fill();circle(10);ctx.strokeStyle=light;ctx.lineWidth=1;ctx.stroke();
+
+}
+new ResizeObserver(cover).observe(select('header'));
+if(edition==='6'){
+ select('#resume').onclick=()=>sync(true);
+ sync();
+}else{
+ select('#live').hidden=true;
+ const history=select('#history');
+ for(const [label,name] of eventInfo.winners||[['赛事状态',eventInfo.note]]){
+  const card=document.createElement('article'),caption=document.createElement('p'),winner=document.createElement('strong');
+  card.className='winner';caption.textContent=label;winner.textContent=name;
+  card.append(caption,winner);history.append(card);
+ }
+ history.hidden=false;
+}
+</script></html>

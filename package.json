@@ -1,0 +1,7 @@
+{
+  "name": "nanke-zouyin",
+  "private": true,
+  "type": "module",
+  "engines": {"node": ">=22"},
+  "scripts": {"build": "node build.js", "prestart": "node build.js", "start": "node local.js"}
+}
